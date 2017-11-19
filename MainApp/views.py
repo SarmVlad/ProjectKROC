@@ -6,8 +6,11 @@ from PIL import Image
 import requests
 from django.http import JsonResponse
 import json
+import os
+
 
 def index(request, year, month, day, city, method="json"):
+
     if models.request.objects.all().filter(date=year + '-' + month + '-' + day, city=city).count() == 0:
 
         # Начало работы с API
@@ -27,8 +30,8 @@ def index(request, year, month, day, city, method="json"):
         requested_wind = data_list[delta_date]['wind']
         # Конец API
 
-        path = 'static/results/res-' + year + '_' + month + '_' + day + '-' + city + '.png'
-        Scotcher(requested_temp, requested_humidity, requested_wind).save(path)
+        path = 'results/res-' + year + '_' + month + '_' + day + '-' + city + '.png'
+        Scotcher(requested_temp, requested_humidity, requested_wind).save( os.getcwd() + '/MainApp/static/' + path)
         json_dict = {'url': 'static/results/res-' + year + '_' + month + '_' + day + '-' + city + '.png',
                      'data': data_list}
         models.request.objects.create(date=year + '-' + month + '-' + day, city=city, json=json.dumps(json_dict),
@@ -36,7 +39,7 @@ def index(request, year, month, day, city, method="json"):
 
         if method == "html":
             context = {
-                'res_path': 'results/res-' + year + '_' + month + '_' + day + '-' + city + '.png'
+                'res_path': path
             }
             return render(request, "index.html", context)
         return JsonResponse(json_dict)
@@ -62,15 +65,14 @@ def Scotcher(temp, humidity, wind):
     tshirt = Garb.get(ident=5)
     vest = Garb.get(ident=6)
 
-    man = Image.open(
-        '/home/vlad/ProjectKROC/MainApp/static/source/' + 'man.png')  # Берём скелет
+    path = os.getcwd() + "/MainApp"
+    man = Image.open(path + '/static/source/' + 'man.png')  # Берём скелет
 
     # Загружаем одежду
-    img_hat = Image.open('/home/vlad/ProjectKROC/MainApp/static/source/' + hat.file_name)
-    img_pants = Image.open('/home/vlad/ProjectKROC/MainApp/static/source/' + pants.file_name)
-    img_tshirt = Image.open(
-        '/home/vlad/ProjectKROC/MainApp/static/source/' + tshirt.file_name)
-    img_vest = Image.open('/home/vlad/ProjectKROC/MainApp/static/source/' + vest.file_name)
+    img_hat = Image.open(path + '/static/source/' + hat.file_name)
+    img_pants = Image.open(path + '/static/source/' + pants.file_name)
+    img_tshirt = Image.open(path + '/static/source/' + tshirt.file_name)
+    img_vest = Image.open(path + '/static/source/' + vest.file_name)
 
     # Склеиваем
     man.paste(img_hat, (hat.cord_x, hat.cord_y), img_hat)
