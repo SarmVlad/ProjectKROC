@@ -40,8 +40,6 @@ INSTALLED_APPS = [
     'MainApp.apps.MainappConfig',
 ]
 
-DATE_INPUT_FORMATS = '%d-%m-%Y'
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -79,15 +77,18 @@ WSGI_APPLICATION = 'ProjectKROC.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+      'ENGINE': 'django.db.backends.postgresql_psycopg2',
+      'NAME': 'my_site',
+      'USER': 'vlad',
+      'PASSWORD': '20011002Ss',
+      'HOST': 'localhost',
+      'PORT': '',
     }
 }
 
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -122,3 +123,5 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
+
+#MEDIA_ROOT = "/home/django/my_site/media"
