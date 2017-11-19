@@ -12,7 +12,7 @@ import os
 def index(request, year, month, day, city, method="json"):
 
     if models.request.objects.all().filter(date=year + '-' + month + '-' + day, city=city).count() == 0:
-
+        #TEST
         # Начало работы с API
         App_Id = "cd4ae38185273442f9a802c3b3a02665"
         res = requests.get("http://api.openweathermap.org/data/2.5/forecast",
@@ -47,7 +47,6 @@ def index(request, year, month, day, city, method="json"):
         cash = models.request.objects.get(date=year + '-' + month + '-' + day, city=city)
         if method == "html":
             context = {
-                # Костыль! Нужно путь брать из res_file_name проблема с \\ и /
                 'res_path': cash.res_file_name,
             }
             return render(request, "index.html", context)
