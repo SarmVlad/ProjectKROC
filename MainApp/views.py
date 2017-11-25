@@ -12,7 +12,7 @@ import os
 def index(request, year, month, day, city, method="json"):
 
     if models.request.objects.all().filter(date=year + '-' + month + '-' + day, city=city).count() == 0:
-        #TEST
+        
         # Начало работы с API
         App_Id = "cd4ae38185273442f9a802c3b3a02665"
         res = requests.get("http://api.openweathermap.org/data/2.5/forecast",
@@ -42,7 +42,9 @@ def index(request, year, month, day, city, method="json"):
                 'res_path': path
             }
             return render(request, "index.html", context)
-        return JsonResponse(json_dict)
+        response = JsonResponse(json_dict)
+        response['Access-Control-Allow-Origin'] = '*'
+        return response
     else:
         cash = models.request.objects.get(date=year + '-' + month + '-' + day, city=city)
         if method == "html":
@@ -50,7 +52,9 @@ def index(request, year, month, day, city, method="json"):
                 'res_path': cash.res_file_name,
             }
             return render(request, "index.html", context)
-        return HttpResponse(cash.json, content_type="application/json")
+        response = HttpResponse(cash.json, content_type="application/json")
+        response['Access-Control-Allow-Origin'] = '*'
+        return response
 
 
 # Функция по составлению человечка
