@@ -1,5 +1,6 @@
 from django.db import models
 
+
 class garb(models.Model):
     file_name = models.TextField()
     ident = models.IntegerField(default=0)
@@ -9,11 +10,13 @@ class garb(models.Model):
     def __str__(self):
         return self.file_name
 
+
 class request(models.Model):
     date = models.DateField()
     city = models.TextField()
     json = models.TextField()
-    res_file_name = models.TextField()
+    res_file_name_m = models.TextField()
+    res_file_name_f = models.TextField()
 
     def __str__(self):
         return self.date.__str__() + '_' + self.city.__str__()

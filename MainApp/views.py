@@ -11,6 +11,8 @@ import os
 
 def index(request, year, month, day, city, method="json"):
 
+    #True it's man, false - woman
+
     if models.request.objects.all().filter(date=year + '-' + month + '-' + day, city=city).count() == 0:
         
         # Начало работы с API
@@ -30,16 +32,19 @@ def index(request, year, month, day, city, method="json"):
         requested_wind = data_list[delta_date]['wind']
         # Конец API
 
-        path = 'results/res-' + year + '_' + month + '_' + day + '-' + city + '.png'
-        Scotcher(requested_temp, requested_humidity, requested_wind).save( os.getcwd() + '/MainApp/static/' + path)
-        json_dict = {'url': 'static/results/res-' + year + '_' + month + '_' + day + '-' + city + '.png',
+        path_m = 'results/res-man' + '_' + year + '_' + month + '_' + day + '-' + city + '.png'
+        path_f = 'results/res-woman' + '_' + year + '_' + month + '_' + day + '-' + city + '.png'
+        Scotcher(True, requested_temp, requested_humidity, requested_wind).save( os.getcwd() + '/MainApp/static/' + path_m)
+        Scotcher(False, requested_temp, requested_humidity, requested_wind).save(os.getcwd() + '/MainApp/static/' + path_f)
+        json_dict = {'url': { 'man' : 'static/results/res-man' + '_' + year + '_' + month + '_' + day + '-' + city + '.png',
+                              'woman' : 'static/results/res-woman' + '_' + year + '_' + month + '_' + day + '-' + city + '.png'},
                      'data': data_list}
-        models.request.objects.create(date=year + '-' + month + '-' + day, city=city, json=json.dumps(json_dict),
-                                      res_file_name=path)
+        models.request.objects.create(date=year + '-' + month + '-' + day, city=city, json=json.dumps(json_dict),res_file_name_m=path_m, res_file_name_f=path_f)
 
         if method == "html":
             context = {
-                'res_path': path
+                'res_path_m': path_m,
+                'res_path_f': path_f,
             }
             return render(request, "index.html", context)
         response = JsonResponse(json_dict)
@@ -49,7 +54,8 @@ def index(request, year, month, day, city, method="json"):
         cash = models.request.objects.get(date=year + '-' + month + '-' + day, city=city)
         if method == "html":
             context = {
-                'res_path': cash.res_file_name,
+                'res_path_m': cash.res_file_name_m,
+                'res_path_f': cash.res_file_name_f,
             }
             return render(request, "index.html", context)
         response = HttpResponse(cash.json, content_type="application/json")
@@ -58,12 +64,18 @@ def index(request, year, month, day, city, method="json"):
 
 
 # Функция по составлению человечка
-def Scotcher(temp, humidity, wind):
+def Scotcher(man, temp, humidity, wind):
     Garb = models.garb.objects
-    if temp < 5:
-        hat = Garb.get(ident=1)
+    if temp < 0:
+        if man:
+            hat = Garb.get(ident=1)
+        else:
+            hat = Garb.get(ident=2)
     else:
-        hat = Garb.get(ident=0)
+        if man:
+            hat = Garb.get(ident=3)
+        else:
+            hat = Garb.get(ident=2)
     pants = Garb.get(ident=4)
     tshirt = Garb.get(ident=5)
     vest = Garb.get(ident=6)
