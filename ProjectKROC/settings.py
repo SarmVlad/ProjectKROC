@@ -78,9 +78,9 @@ WSGI_APPLICATION = 'ProjectKROC.wsgi.application'
 DATABASES = {
     'default': {
       'ENGINE': 'django.db.backends.postgresql_psycopg2',
-      'NAME': 'my_site',
-      'USER': 'vlad',
-      'PASSWORD': '20011002Ss',
+      'NAME': 'mydb',
+      'USER': 'vlados',
+      'PASSWORD': '1234',
       'HOST': 'localhost',
       'PORT': '',
     }
@@ -124,4 +124,4 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-#MEDIA_ROOT = "/home/django/my_site/media"
+STATIC_ROOT = "/root/site/ProjectKROC/MainApp/static/"
