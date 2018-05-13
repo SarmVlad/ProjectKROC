@@ -8,5 +8,10 @@
 <body>
 <img src="{% static res_path_m %}">
 <img src="{% static res_path_f %}">
+<ul>
+{% for advice in advices %}
+<li>{{ advice }}</li>
+{% endfor %}
+</ul>
 </body>
 </html>

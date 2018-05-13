@@ -1,4 +1,7 @@
 from django.db import models
+from django.db.models.functions.datetime import datetime
+from django.utils import timezone
+
 
 
 class garb(models.Model):
@@ -13,11 +16,13 @@ class garb(models.Model):
 
 class request(models.Model):
     date = models.DateField()
-    city = models.TextField()
+    request_date = models.DateTimeField(default=timezone.now)
+    lat = models.FloatField(default=0)
+    lon = models.FloatField(default=0)
     json = models.TextField()
-    res_file_name_m = models.TextField()
-    res_file_name_f = models.TextField()
+    res_file_name_m = models.TextField(default='-')
+    res_file_name_f = models.TextField(default='-')
 
     def __str__(self):
-        return self.date.__str__() + '_' + self.city.__str__()
+        return self.date.__str__() + '_' + self.lat.__str__() + '_' + self.lon.__str__()
 
